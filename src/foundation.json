@@ -1,0 +1,860 @@
+{
+  "python": {
+    "bindings": {
+      "headline": "給資料一個名字",
+      "explanation": "程式用名稱指向資料，讓我們能儲存、計算並重複使用它。先把輸入轉成數字，再進行加法；否則某些語言可能把它當成文字串接。",
+      "points": [
+        "用 = 綁定名稱，不必先宣告型別。",
+        "input() 取得字串；int() 才轉成整數。",
+        "名稱可重新綁定，型別由執行時的值決定。"
+      ],
+      "example": "price = 120\nquantity = 2\ntotal = price * quantity\nprint(total)  # 240",
+      "starter": "a, b = map(int, input().split())\nanswer = 0  # TODO：計算 a 與 b 的總和\nprint(answer)\n",
+      "solution": "a, b = map(int, input().split())\nanswer = a + b\nprint(answer)\n",
+      "hint": "先確認輸入已轉成整數，再把兩個值相加。",
+      "sourceTitle": "Python 官方教學",
+      "source": "https://docs.python.org/3/tutorial/",
+      "difference": "Python 可直接重新綁定變數；Rust 的 let 預設不可重新賦值，Haskell 的綁定則是不可變的。",
+      "task": "讀入兩個以空白分隔的整數 a、b，綁定變數並輸出它們的總和。範圍：每個整數介於 -1000 與 1000。只輸出答案，不要加提示文字。",
+      "tests": [
+        {
+          "input": "12 8",
+          "expected": "20",
+          "label": "兩個正整數"
+        },
+        {
+          "input": "-5 2",
+          "expected": "-3",
+          "label": "含負整數"
+        },
+        {
+          "input": "0 0",
+          "expected": "0",
+          "label": "零的情況"
+        }
+      ]
+    },
+    "branches": {
+      "headline": "讓程式做出選擇",
+      "explanation": "條件判斷會依條件選擇一條路徑。當規則有多個區間，請由小到大思考，尤其注意邊界上的數字應該屬於哪一類。",
+      "points": [
+        "if、elif、else 的行尾要有冒號。",
+        "縮排決定程式區塊，慣例是四個空白。",
+        "比較用 ==，賦值用 =。"
+      ],
+      "example": "score = 72\nif score >= 60:\n    print(\"及格\")\nelse:\n    print(\"再試一次\")",
+      "starter": "age = int(input())\nprice = 0  # TODO：根據年齡決定票價\nprint(price)\n",
+      "solution": "age = int(input())\nif age < 6:\n    price = 0\nelif age < 18:\n    price = 80\nelse:\n    price = 120\nprint(price)\n",
+      "hint": "先判斷 age < 6，再判斷 age < 18，最後處理成人票。",
+      "sourceTitle": "Python 官方教學",
+      "source": "https://docs.python.org/3/tutorial/",
+      "difference": "Python 用縮排標示區塊；Java、C#、JavaScript、Rust 通常用大括號。",
+      "task": "讀入整數年齡 age（0–120），輸出票價：未滿 6 歲為 0 元；6–17 歲為 80 元；18 歲以上為 120 元。只輸出數字。",
+      "tests": [
+        {
+          "input": "5",
+          "expected": "0",
+          "label": "未滿 6 歲免費"
+        },
+        {
+          "input": "6",
+          "expected": "80",
+          "label": "6 歲的邊界"
+        },
+        {
+          "input": "17",
+          "expected": "80",
+          "label": "17 歲的邊界"
+        },
+        {
+          "input": "18",
+          "expected": "120",
+          "label": "18 歲成人票"
+        }
+      ]
+    },
+    "functions": {
+      "headline": "把運算變成可重複的積木",
+      "explanation": "函式把一段運算命名，接收輸入並產生結果。把「計算」和「讀取、顯示資料」分開，可以讓程式更容易理解與測試。",
+      "points": [
+        "def 定義函式，參數放在括號內。",
+        "return 把結果交還呼叫端。",
+        "函式沒有 return 時會回傳 None。"
+      ],
+      "example": "def double(n):\n    return n * 2\n\nprint(double(6))  # 12",
+      "starter": "def square(n):\n    return 0  # TODO：回傳平方\n\nn = int(input())\nprint(square(n))\n",
+      "solution": "def square(n):\n    return n * n\n\nn = int(input())\nprint(square(n))\n",
+      "hint": "平方是數字乘上自己；結果要從函式回傳。",
+      "sourceTitle": "Python 官方教學",
+      "source": "https://docs.python.org/3/tutorial/",
+      "difference": "Python 不強制標註參數與回傳型別；Rust、Java、C# 通常需要明確型別。",
+      "task": "完成 square 函式，接收整數 n 並回傳 n 的平方。主程式讀入 n（-1000–1000），呼叫 square 並輸出結果。",
+      "tests": [
+        {
+          "input": "4",
+          "expected": "16",
+          "label": "正整數平方"
+        },
+        {
+          "input": "-3",
+          "expected": "9",
+          "label": "負整數平方"
+        },
+        {
+          "input": "0",
+          "expected": "0",
+          "label": "零的平方"
+        }
+      ]
+    },
+    "collections": {
+      "headline": "一次處理一組資料",
+      "explanation": "集合保存一組資料。處理時可以逐一走訪，也可以先篩選再彙整。不同語言的寫法不一樣，但我們想完成的資料轉換相同。",
+      "points": [
+        "list 可以保存多個值。",
+        "for 直接走訪清單中的元素。",
+        "也能用 sum(n for n in numbers if n > 0)。"
+      ],
+      "example": "numbers = [2, -1, 4]\ntotal = 0\nfor number in numbers:\n    if number > 0:\n        total += number\nprint(total)  # 6",
+      "starter": "numbers = list(map(int, input().split()))\ntotal = 0  # TODO：只加總正整數\nprint(total)\n",
+      "solution": "numbers = list(map(int, input().split()))\ntotal = sum(n for n in numbers if n > 0)\nprint(total)\n",
+      "hint": "保留 n > 0 的元素，再加總。起始總和應為 0。",
+      "sourceTitle": "Python 官方教學",
+      "source": "https://docs.python.org/3/tutorial/",
+      "difference": "Python 可以累加變數，也能使用生成式；Haskell 通常以不可變資料與函式組合表達。",
+      "task": "讀入一行以空白分隔的整數（1–100 個，每個介於 -1000 與 1000），只加總大於 0 的數字並輸出。可使用迴圈、遞迴或 filter 搭配 sum。",
+      "tests": [
+        {
+          "input": "3 -2 5 0 -1",
+          "expected": "8",
+          "label": "只累加正整數"
+        },
+        {
+          "input": "-3 -2 -1",
+          "expected": "0",
+          "label": "全部非正數"
+        },
+        {
+          "input": "0 7 2 1",
+          "expected": "10",
+          "label": "含零的清單"
+        }
+      ]
+    }
+  },
+  "javascript": {
+    "bindings": {
+      "headline": "給資料一個名字",
+      "explanation": "程式用名稱指向資料，讓我們能儲存、計算並重複使用它。先把輸入轉成數字，再進行加法；否則某些語言可能把它當成文字串接。",
+      "points": [
+        "優先用 const；需要重新賦值時用 let。",
+        "Number(\"12\") 可把字串轉成數字。",
+        "+ 遇到字串可能進行串接，請先確認型別。"
+      ],
+      "example": "const price = 120;\nconst quantity = 2;\nconst total = price * quantity;\nconsole.log(total); // 240",
+      "starter": "const fs = require('node:fs');\nconst values = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst [a, b] = values;\nconst answer = 0; // TODO：計算總和\n// 修改上一行的運算式\nconsole.log(answer);\n",
+      "solution": "const fs = require('node:fs');\nconst values = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst [a, b] = values;\nconst answer = a + b;\nconsole.log(answer);\n",
+      "hint": "先確認輸入已轉成整數，再把兩個值相加。",
+      "sourceTitle": "MDN JavaScript Guide",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
+      "difference": "const 限制的是重新賦值，不會讓物件深度不可變。這與 Haskell 的不可變資料概念不同。",
+      "task": "讀入兩個以空白分隔的整數 a、b，綁定變數並輸出它們的總和。範圍：每個整數介於 -1000 與 1000。只輸出答案，不要加提示文字。",
+      "tests": [
+        {
+          "input": "12 8",
+          "expected": "20",
+          "label": "兩個正整數"
+        },
+        {
+          "input": "-5 2",
+          "expected": "-3",
+          "label": "含負整數"
+        },
+        {
+          "input": "0 0",
+          "expected": "0",
+          "label": "零的情況"
+        }
+      ]
+    },
+    "branches": {
+      "headline": "讓程式做出選擇",
+      "explanation": "條件判斷會依條件選擇一條路徑。當規則有多個區間，請由小到大思考，尤其注意邊界上的數字應該屬於哪一類。",
+      "points": [
+        "條件寫在括號內，區塊使用大括號。",
+        "多個分支使用 else if。",
+        "相等比較優先使用 ===，避免隱式型別轉換。"
+      ],
+      "example": "const score = 72;\nif (score >= 60) {\n  console.log(\"及格\");\n} else {\n  console.log(\"再試一次\");\n}",
+      "starter": "const fs = require('node:fs');\nconst values = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst [age] = values;\nlet price = 0; // TODO：根據年齡決定票價\nconsole.log(price);\n",
+      "solution": "const fs = require('node:fs');\nconst values = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst [age] = values;\nlet price;\nif (age < 6) price = 0;\nelse if (age < 18) price = 80;\nelse price = 120;\nconsole.log(price);\n",
+      "hint": "先判斷 age < 6，再判斷 age < 18，最後處理成人票。",
+      "sourceTitle": "MDN JavaScript Guide",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
+      "difference": "JavaScript 的 if 可接收 truthy／falsy 值；Rust、Java、C# 的條件必須是布林值。",
+      "task": "讀入整數年齡 age（0–120），輸出票價：未滿 6 歲為 0 元；6–17 歲為 80 元；18 歲以上為 120 元。只輸出數字。",
+      "tests": [
+        {
+          "input": "5",
+          "expected": "0",
+          "label": "未滿 6 歲免費"
+        },
+        {
+          "input": "6",
+          "expected": "80",
+          "label": "6 歲的邊界"
+        },
+        {
+          "input": "17",
+          "expected": "80",
+          "label": "17 歲的邊界"
+        },
+        {
+          "input": "18",
+          "expected": "120",
+          "label": "18 歲成人票"
+        }
+      ]
+    },
+    "functions": {
+      "headline": "把運算變成可重複的積木",
+      "explanation": "函式把一段運算命名，接收輸入並產生結果。把「計算」和「讀取、顯示資料」分開，可以讓程式更容易理解與測試。",
+      "points": [
+        "function 宣告具名函式。",
+        "return 明確回傳結果。",
+        "也能寫成 const double = n => n * 2。"
+      ],
+      "example": "function double(n) {\n  return n * 2;\n}\nconsole.log(double(6)); // 12",
+      "starter": "const fs = require('node:fs');\nconst values = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nfunction square(n) {\n  return 0; // TODO：回傳平方\n}\nconsole.log(square(values[0]));\n",
+      "solution": "const fs = require('node:fs');\nconst values = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nfunction square(n) {\n  return n * n; \n}\nconsole.log(square(values[0]));\n",
+      "hint": "平方是數字乘上自己；結果要從函式回傳。",
+      "sourceTitle": "MDN JavaScript Guide",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
+      "difference": "JavaScript 的函式是一等值，可以傳入其他函式；Java 常以函式介面表達類似需求。",
+      "task": "完成 square 函式，接收整數 n 並回傳 n 的平方。主程式讀入 n（-1000–1000），呼叫 square 並輸出結果。",
+      "tests": [
+        {
+          "input": "4",
+          "expected": "16",
+          "label": "正整數平方"
+        },
+        {
+          "input": "-3",
+          "expected": "9",
+          "label": "負整數平方"
+        },
+        {
+          "input": "0",
+          "expected": "0",
+          "label": "零的平方"
+        }
+      ]
+    },
+    "collections": {
+      "headline": "一次處理一組資料",
+      "explanation": "集合保存一組資料。處理時可以逐一走訪，也可以先篩選再彙整。不同語言的寫法不一樣，但我們想完成的資料轉換相同。",
+      "points": [
+        "陣列用 [] 建立。",
+        "for...of 走訪值；for...in 主要列舉屬性鍵。",
+        "filter 篩選，reduce 彙整為單一值。"
+      ],
+      "example": "const numbers = [2, -1, 4];\nlet total = 0;\nfor (const n of numbers) {\n  if (n > 0) total += n;\n}\nconsole.log(total); // 6",
+      "starter": "const fs = require('node:fs');\nconst values = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst total = 0; // TODO：只加總正整數\nconsole.log(total);\n",
+      "solution": "const fs = require('node:fs');\nconst values = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst total = values.filter(n => n > 0).reduce((sum, n) => sum + n, 0); \nconsole.log(total);\n",
+      "hint": "保留 n > 0 的元素，再加總。起始總和應為 0。",
+      "sourceTitle": "MDN JavaScript Guide",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
+      "difference": "JavaScript 可以混合迴圈與高階函式；Haskell 的 map、filter 與折疊則是核心工具。",
+      "task": "讀入一行以空白分隔的整數（1–100 個，每個介於 -1000 與 1000），只加總大於 0 的數字並輸出。可使用迴圈、遞迴或 filter 搭配 sum。",
+      "tests": [
+        {
+          "input": "3 -2 5 0 -1",
+          "expected": "8",
+          "label": "只累加正整數"
+        },
+        {
+          "input": "-3 -2 -1",
+          "expected": "0",
+          "label": "全部非正數"
+        },
+        {
+          "input": "0 7 2 1",
+          "expected": "10",
+          "label": "含零的清單"
+        }
+      ]
+    }
+  },
+  "csharp": {
+    "bindings": {
+      "headline": "給資料一個名字",
+      "explanation": "程式用名稱指向資料，讓我們能儲存、計算並重複使用它。先把輸入轉成數字，再進行加法；否則某些語言可能把它當成文字串接。",
+      "points": [
+        "int 是整數型別；var 由編譯器推斷型別。",
+        "var 仍是靜態型別，之後不能改存字串。",
+        "int.Parse 可把數字字串轉成整數。"
+      ],
+      "example": "int price = 120;\nint quantity = 2;\nvar total = price * quantity;\nConsole.WriteLine(total); // 240",
+      "starter": "using System;\nusing System.Linq;\n\nvar values = Console.ReadLine()!.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();\n\nint a = values[0], b = values[1];\nint answer = 0; // TODO：計算總和\nConsole.WriteLine(answer);\n",
+      "solution": "using System;\nusing System.Linq;\n\nvar values = Console.ReadLine()!.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();\n\nint a = values[0], b = values[1];\nint answer = a + b; // 計算總和\nConsole.WriteLine(answer);\n",
+      "hint": "先確認輸入已轉成整數，再把兩個值相加。",
+      "sourceTitle": "Microsoft Learn · C#",
+      "source": "https://learn.microsoft.com/en-us/dotnet/csharp/",
+      "difference": "C# 的 var 是編譯時型別推斷，與 JavaScript 的動態型別不同。",
+      "task": "讀入兩個以空白分隔的整數 a、b，綁定變數並輸出它們的總和。範圍：每個整數介於 -1000 與 1000。只輸出答案，不要加提示文字。",
+      "tests": [
+        {
+          "input": "12 8",
+          "expected": "20",
+          "label": "兩個正整數"
+        },
+        {
+          "input": "-5 2",
+          "expected": "-3",
+          "label": "含負整數"
+        },
+        {
+          "input": "0 0",
+          "expected": "0",
+          "label": "零的情況"
+        }
+      ]
+    },
+    "branches": {
+      "headline": "讓程式做出選擇",
+      "explanation": "條件判斷會依條件選擇一條路徑。當規則有多個區間，請由小到大思考，尤其注意邊界上的數字應該屬於哪一類。",
+      "points": [
+        "條件運算式必須產生 bool。",
+        "&& 表示且，|| 表示或。",
+        "可用 condition ? a : b 選擇值。"
+      ],
+      "example": "int score = 72;\nif (score >= 60)\n{\n    Console.WriteLine(\"及格\");\n}\nelse\n{\n    Console.WriteLine(\"再試一次\");\n}",
+      "starter": "using System;\nusing System.Linq;\n\nvar values = Console.ReadLine()!.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();\n\nint age = values[0];\nint price = 0; // TODO：根據年齡決定票價\nConsole.WriteLine(price);\n",
+      "solution": "using System;\nusing System.Linq;\n\nvar values = Console.ReadLine()!.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();\n\nint age = values[0];\nint price;\nif (age < 6) price = 0;\nelse if (age < 18) price = 80;\nelse price = 120;\nConsole.WriteLine(price);\n",
+      "hint": "先判斷 age < 6，再判斷 age < 18，最後處理成人票。",
+      "sourceTitle": "Microsoft Learn · C#",
+      "source": "https://learn.microsoft.com/en-us/dotnet/csharp/",
+      "difference": "C# 不把整數自動當作條件；Python 和 JavaScript 有不同的真值轉換規則。",
+      "task": "讀入整數年齡 age（0–120），輸出票價：未滿 6 歲為 0 元；6–17 歲為 80 元；18 歲以上為 120 元。只輸出數字。",
+      "tests": [
+        {
+          "input": "5",
+          "expected": "0",
+          "label": "未滿 6 歲免費"
+        },
+        {
+          "input": "6",
+          "expected": "80",
+          "label": "6 歲的邊界"
+        },
+        {
+          "input": "17",
+          "expected": "80",
+          "label": "17 歲的邊界"
+        },
+        {
+          "input": "18",
+          "expected": "120",
+          "label": "18 歲成人票"
+        }
+      ]
+    },
+    "functions": {
+      "headline": "把運算變成可重複的積木",
+      "explanation": "函式把一段運算命名，接收輸入並產生結果。把「計算」和「讀取、顯示資料」分開，可以讓程式更容易理解與測試。",
+      "points": [
+        "函式指定參數與回傳型別。",
+        "此處使用頂層程式中的區域函式。",
+        "void 表示沒有回傳值。"
+      ],
+      "example": "static int Double(int n)\n{\n    return n * 2;\n}\nConsole.WriteLine(Double(6)); // 12",
+      "starter": "using System;\nusing System.Linq;\n\nvar values = Console.ReadLine()!.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();\n\nstatic int square(int n)\n{\n    return 0; // TODO：回傳平方\n}\nConsole.WriteLine(square(values[0]));\n",
+      "solution": "using System;\nusing System.Linq;\n\nvar values = Console.ReadLine()!.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();\n\nstatic int square(int n)\n{\n    return n * n; // 回傳平方\n}\nConsole.WriteLine(square(values[0]));\n",
+      "hint": "平方是數字乘上自己；結果要從函式回傳。",
+      "sourceTitle": "Microsoft Learn · C#",
+      "source": "https://learn.microsoft.com/en-us/dotnet/csharp/",
+      "difference": "C# 可用頂層陳述式撰寫簡短程式；本課 Java 範例使用 Main 類別與 main 方法。",
+      "task": "完成 square 函式，接收整數 n 並回傳 n 的平方。主程式讀入 n（-1000–1000），呼叫 square 並輸出結果。",
+      "tests": [
+        {
+          "input": "4",
+          "expected": "16",
+          "label": "正整數平方"
+        },
+        {
+          "input": "-3",
+          "expected": "9",
+          "label": "負整數平方"
+        },
+        {
+          "input": "0",
+          "expected": "0",
+          "label": "零的平方"
+        }
+      ]
+    },
+    "collections": {
+      "headline": "一次處理一組資料",
+      "explanation": "集合保存一組資料。處理時可以逐一走訪，也可以先篩選再彙整。不同語言的寫法不一樣，但我們想完成的資料轉換相同。",
+      "points": [
+        "陣列元素具有固定型別。",
+        "foreach 可直接走訪每個值。",
+        "LINQ 的 Where 與 Sum 可表達篩選和加總。"
+      ],
+      "example": "int[] numbers = { 2, -1, 4 };\nint total = 0;\nforeach (int n in numbers)\n{\n    if (n > 0) total += n;\n}\nConsole.WriteLine(total); // 6",
+      "starter": "using System;\nusing System.Linq;\n\nvar values = Console.ReadLine()!.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();\n\nint total = 0; // TODO：只加總正整數\nConsole.WriteLine(total);\n",
+      "solution": "using System;\nusing System.Linq;\n\nvar values = Console.ReadLine()!.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();\n\nint total = values.Where(n => n > 0).Sum(); // 篩選並加總\nConsole.WriteLine(total);\n",
+      "hint": "保留 n > 0 的元素，再加總。起始總和應為 0。",
+      "sourceTitle": "Microsoft Learn · C#",
+      "source": "https://learn.microsoft.com/en-us/dotnet/csharp/",
+      "difference": "C# 的 LINQ 可用宣告式方式處理資料；Rust 可使用迭代器，Haskell 可用清單函式。",
+      "task": "讀入一行以空白分隔的整數（1–100 個，每個介於 -1000 與 1000），只加總大於 0 的數字並輸出。可使用迴圈、遞迴或 filter 搭配 sum。",
+      "tests": [
+        {
+          "input": "3 -2 5 0 -1",
+          "expected": "8",
+          "label": "只累加正整數"
+        },
+        {
+          "input": "-3 -2 -1",
+          "expected": "0",
+          "label": "全部非正數"
+        },
+        {
+          "input": "0 7 2 1",
+          "expected": "10",
+          "label": "含零的清單"
+        }
+      ]
+    }
+  },
+  "rust": {
+    "bindings": {
+      "headline": "給資料一個名字",
+      "explanation": "程式用名稱指向資料，讓我們能儲存、計算並重複使用它。先把輸入轉成數字，再進行加法；否則某些語言可能把它當成文字串接。",
+      "points": [
+        "let 預設不可重新賦值；let mut 才可改變。",
+        "整數型別可明確標註，或由編譯器推斷。",
+        "相同名稱可用另一個 let 遮蔽舊綁定。"
+      ],
+      "example": "fn main() {\n    let price: i32 = 120;\n    let quantity = 2;\n    let total = price * quantity;\n    println!(\"{}\", total); // 240\n}",
+      "starter": "use std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let values: Vec<i32> = input.split_whitespace()\n        .map(|s| s.parse().unwrap()).collect();\n\n    let a = values[0];\n    let b = values[1];\n    let answer = 0; // TODO：計算總和\n    println!(\"{}\", answer);\n}\n",
+      "solution": "use std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let values: Vec<i32> = input.split_whitespace()\n        .map(|s| s.parse().unwrap()).collect();\n\n    let a = values[0];\n    let b = values[1];\n    let answer = a + b; // 計算總和\n    println!(\"{}\", answer);\n}\n",
+      "hint": "先確認輸入已轉成整數，再把兩個值相加。",
+      "sourceTitle": "The Rust Programming Language",
+      "source": "https://doc.rust-lang.org/book/",
+      "difference": "Rust 用可變性與所有權管理資料；本章先處理可複製的整數，之後再深入借用。",
+      "task": "讀入兩個以空白分隔的整數 a、b，綁定變數並輸出它們的總和。範圍：每個整數介於 -1000 與 1000。只輸出答案，不要加提示文字。",
+      "tests": [
+        {
+          "input": "12 8",
+          "expected": "20",
+          "label": "兩個正整數"
+        },
+        {
+          "input": "-5 2",
+          "expected": "-3",
+          "label": "含負整數"
+        },
+        {
+          "input": "0 0",
+          "expected": "0",
+          "label": "零的情況"
+        }
+      ]
+    },
+    "branches": {
+      "headline": "讓程式做出選擇",
+      "explanation": "條件判斷會依條件選擇一條路徑。當規則有多個區間，請由小到大思考，尤其注意邊界上的數字應該屬於哪一類。",
+      "points": [
+        "if 條件必須是 bool，通常不加外層括號。",
+        "if 是運算式，可以產生值。",
+        "作為值時，各分支的型別必須相容。"
+      ],
+      "example": "fn main() {\n    let score = 72;\n    let result = if score >= 60 {\n        \"及格\"\n    } else {\n        \"再試一次\"\n    };\n    println!(\"{}\", result);\n}",
+      "starter": "use std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let values: Vec<i32> = input.split_whitespace()\n        .map(|s| s.parse().unwrap()).collect();\n\n    let age = values[0];\n    let price = 0; // TODO：決定票價\n    println!(\"{}\", price);\n}\n",
+      "solution": "use std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let values: Vec<i32> = input.split_whitespace()\n        .map(|s| s.parse().unwrap()).collect();\n\n    let age = values[0];\n    let price = if age < 6 { 0 } else if age < 18 { 80 } else { 120 }; // 票價\n    println!(\"{}\", price);\n}\n",
+      "hint": "先判斷 age < 6，再判斷 age < 18，最後處理成人票。",
+      "sourceTitle": "The Rust Programming Language",
+      "source": "https://doc.rust-lang.org/book/",
+      "difference": "Rust 的 if 可以直接回傳值，與 Haskell 的 if...then...else 相近。",
+      "task": "讀入整數年齡 age（0–120），輸出票價：未滿 6 歲為 0 元；6–17 歲為 80 元；18 歲以上為 120 元。只輸出數字。",
+      "tests": [
+        {
+          "input": "5",
+          "expected": "0",
+          "label": "未滿 6 歲免費"
+        },
+        {
+          "input": "6",
+          "expected": "80",
+          "label": "6 歲的邊界"
+        },
+        {
+          "input": "17",
+          "expected": "80",
+          "label": "17 歲的邊界"
+        },
+        {
+          "input": "18",
+          "expected": "120",
+          "label": "18 歲成人票"
+        }
+      ]
+    },
+    "functions": {
+      "headline": "把運算變成可重複的積木",
+      "explanation": "函式把一段運算命名，接收輸入並產生結果。把「計算」和「讀取、顯示資料」分開，可以讓程式更容易理解與測試。",
+      "points": [
+        "fn 宣告函式，參數型別不可省略。",
+        "-> 指定回傳型別。",
+        "區塊最後的運算式不加分號即可回傳。"
+      ],
+      "example": "fn double(n: i32) -> i32 {\n    n * 2\n}\n\nfn main() {\n    println!(\"{}\", double(6));\n}",
+      "starter": "use std::io::{self, Read};\n\nfn square(n: i32) -> i32 {\n    0 // TODO：回傳平方\n}\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let values: Vec<i32> = input.split_whitespace()\n        .map(|s| s.parse().unwrap()).collect();\n\n    println!(\"{}\", square(values[0]));\n}\n",
+      "solution": "use std::io::{self, Read};\n\nfn square(n: i32) -> i32 {\n    n * n\n}\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let values: Vec<i32> = input.split_whitespace()\n        .map(|s| s.parse().unwrap()).collect();\n\n    println!(\"{}\", square(values[0]));\n}\n",
+      "hint": "平方是數字乘上自己；結果要從函式回傳。",
+      "sourceTitle": "The Rust Programming Language",
+      "source": "https://doc.rust-lang.org/book/",
+      "difference": "Rust 的尾端運算式可作為回傳值；加上分號可能把結果變成單元型別 ()。",
+      "task": "完成 square 函式，接收整數 n 並回傳 n 的平方。主程式讀入 n（-1000–1000），呼叫 square 並輸出結果。",
+      "tests": [
+        {
+          "input": "4",
+          "expected": "16",
+          "label": "正整數平方"
+        },
+        {
+          "input": "-3",
+          "expected": "9",
+          "label": "負整數平方"
+        },
+        {
+          "input": "0",
+          "expected": "0",
+          "label": "零的平方"
+        }
+      ]
+    },
+    "collections": {
+      "headline": "一次處理一組資料",
+      "explanation": "集合保存一組資料。處理時可以逐一走訪，也可以先篩選再彙整。不同語言的寫法不一樣，但我們想完成的資料轉換相同。",
+      "points": [
+        "Vec 保存可變長度、相同型別的元素。",
+        "iter() 借用元素，不取得集合所有權。",
+        "filter 篩選，sum 消耗迭代器並加總。"
+      ],
+      "example": "fn main() {\n    let numbers = vec![2, -1, 4];\n    let total: i32 = numbers.iter()\n        .filter(|&&n| n > 0)\n        .sum();\n    println!(\"{}\", total); // 6\n}",
+      "starter": "use std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let values: Vec<i32> = input.split_whitespace()\n        .map(|s| s.parse().unwrap()).collect();\n\n    let total: i32 = 0; // TODO：只加總正整數\n    println!(\"{}\", total);\n}\n",
+      "solution": "use std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let values: Vec<i32> = input.split_whitespace()\n        .map(|s| s.parse().unwrap()).collect();\n\n    let total: i32 = values.iter().filter(|&&n| n > 0).sum(); // 篩選並加總\n    println!(\"{}\", total);\n}\n",
+      "hint": "保留 n > 0 的元素，再加總。起始總和應為 0。",
+      "sourceTitle": "The Rust Programming Language",
+      "source": "https://doc.rust-lang.org/book/",
+      "difference": "Rust 的 iter() 元素是參考；篩選閉包接收參考的參考，模式 |&&n| 解開兩層。",
+      "task": "讀入一行以空白分隔的整數（1–100 個，每個介於 -1000 與 1000），只加總大於 0 的數字並輸出。可使用迴圈、遞迴或 filter 搭配 sum。",
+      "tests": [
+        {
+          "input": "3 -2 5 0 -1",
+          "expected": "8",
+          "label": "只累加正整數"
+        },
+        {
+          "input": "-3 -2 -1",
+          "expected": "0",
+          "label": "全部非正數"
+        },
+        {
+          "input": "0 7 2 1",
+          "expected": "10",
+          "label": "含零的清單"
+        }
+      ]
+    }
+  },
+  "java": {
+    "bindings": {
+      "headline": "給資料一個名字",
+      "explanation": "程式用名稱指向資料，讓我們能儲存、計算並重複使用它。先把輸入轉成數字，再進行加法；否則某些語言可能把它當成文字串接。",
+      "points": [
+        "int 宣告整數變數。",
+        "敘述通常以分號結束。",
+        "Integer.parseInt 可將字串轉成整數。"
+      ],
+      "example": "public class Main {\n    public static void main(String[] args) {\n        int price = 120;\n        int quantity = 2;\n        int total = price * quantity;\n        System.out.println(total);\n    }\n}",
+      "starter": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[] values = Arrays.stream(scanner.nextLine().trim().split(\"\\\\s+\"))\n            .mapToInt(Integer::parseInt).toArray();\n\n        int a = values[0], b = values[1];\n        int answer = 0; // TODO：計算總和\n        System.out.println(answer);\n    }\n}\n",
+      "solution": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[] values = Arrays.stream(scanner.nextLine().trim().split(\"\\\\s+\"))\n            .mapToInt(Integer::parseInt).toArray();\n\n        int a = values[0], b = values[1];\n        int answer = a + b; // 總和\n        System.out.println(answer);\n    }\n}\n",
+      "hint": "先確認輸入已轉成整數，再把兩個值相加。",
+      "sourceTitle": "Dev.java · Learn Java",
+      "source": "https://dev.java/learn/",
+      "difference": "這組 Java 課程採傳統 main 入口，方便理解類別與方法；其他語言可能直接寫頂層程式。",
+      "task": "讀入兩個以空白分隔的整數 a、b，綁定變數並輸出它們的總和。範圍：每個整數介於 -1000 與 1000。只輸出答案，不要加提示文字。",
+      "tests": [
+        {
+          "input": "12 8",
+          "expected": "20",
+          "label": "兩個正整數"
+        },
+        {
+          "input": "-5 2",
+          "expected": "-3",
+          "label": "含負整數"
+        },
+        {
+          "input": "0 0",
+          "expected": "0",
+          "label": "零的情況"
+        }
+      ]
+    },
+    "branches": {
+      "headline": "讓程式做出選擇",
+      "explanation": "條件判斷會依條件選擇一條路徑。當規則有多個區間，請由小到大思考，尤其注意邊界上的數字應該屬於哪一類。",
+      "points": [
+        "if 條件必須是 boolean。",
+        "else if 用來接續下一個條件。",
+        "字串內容比較用 equals，而非 ==。"
+      ],
+      "example": "public class Main {\n    public static void main(String[] args) {\n        int score = 72;\n        if (score >= 60) {\n            System.out.println(\"及格\");\n        } else {\n            System.out.println(\"再試一次\");\n        }\n    }\n}",
+      "starter": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[] values = Arrays.stream(scanner.nextLine().trim().split(\"\\\\s+\"))\n            .mapToInt(Integer::parseInt).toArray();\n\n        int age = values[0];\n        int price = 0; // TODO：根據年齡決定票價\n        System.out.println(price);\n    }\n}\n",
+      "solution": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[] values = Arrays.stream(scanner.nextLine().trim().split(\"\\\\s+\"))\n            .mapToInt(Integer::parseInt).toArray();\n\n        int age = values[0];\n        int price;\n        if (age < 6) price = 0;\n        else if (age < 18) price = 80;\n        else price = 120;\n        System.out.println(price);\n    }\n}\n",
+      "hint": "先判斷 age < 6，再判斷 age < 18，最後處理成人票。",
+      "sourceTitle": "Dev.java · Learn Java",
+      "source": "https://dev.java/learn/",
+      "difference": "Java 的 == 比較物件參考是否相同；C# 的字串 == 則有內容比較語意。",
+      "task": "讀入整數年齡 age（0–120），輸出票價：未滿 6 歲為 0 元；6–17 歲為 80 元；18 歲以上為 120 元。只輸出數字。",
+      "tests": [
+        {
+          "input": "5",
+          "expected": "0",
+          "label": "未滿 6 歲免費"
+        },
+        {
+          "input": "6",
+          "expected": "80",
+          "label": "6 歲的邊界"
+        },
+        {
+          "input": "17",
+          "expected": "80",
+          "label": "17 歲的邊界"
+        },
+        {
+          "input": "18",
+          "expected": "120",
+          "label": "18 歲成人票"
+        }
+      ]
+    },
+    "functions": {
+      "headline": "把運算變成可重複的積木",
+      "explanation": "函式把一段運算命名，接收輸入並產生結果。把「計算」和「讀取、顯示資料」分開，可以讓程式更容易理解與測試。",
+      "points": [
+        "方法宣告包含回傳型別與參數型別。",
+        "static 方法可不建立物件就呼叫。",
+        "return 把結果傳回呼叫者。"
+      ],
+      "example": "public class Main {\n    static int twice(int n) {\n        return n * 2;\n    }\n    public static void main(String[] args) {\n        System.out.println(twice(6));\n    }\n}",
+      "starter": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class Main {\n    static int square(int n) {\n        return 0; // TODO：回傳平方\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[] values = Arrays.stream(scanner.nextLine().trim().split(\"\\\\s+\"))\n            .mapToInt(Integer::parseInt).toArray();\n\n        System.out.println(square(values[0]));\n    }\n}\n",
+      "solution": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class Main {\n    static int square(int n) {\n        return n * n; // 平方\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[] values = Arrays.stream(scanner.nextLine().trim().split(\"\\\\s+\"))\n            .mapToInt(Integer::parseInt).toArray();\n\n        System.out.println(square(values[0]));\n    }\n}\n",
+      "hint": "平方是數字乘上自己；結果要從函式回傳。",
+      "sourceTitle": "Dev.java · Learn Java",
+      "source": "https://dev.java/learn/",
+      "difference": "Java 的具名方法定義在類別中；Haskell 的函式不需要類別容器。",
+      "task": "完成 square 函式，接收整數 n 並回傳 n 的平方。主程式讀入 n（-1000–1000），呼叫 square 並輸出結果。",
+      "tests": [
+        {
+          "input": "4",
+          "expected": "16",
+          "label": "正整數平方"
+        },
+        {
+          "input": "-3",
+          "expected": "9",
+          "label": "負整數平方"
+        },
+        {
+          "input": "0",
+          "expected": "0",
+          "label": "零的平方"
+        }
+      ]
+    },
+    "collections": {
+      "headline": "一次處理一組資料",
+      "explanation": "集合保存一組資料。處理時可以逐一走訪，也可以先篩選再彙整。不同語言的寫法不一樣，但我們想完成的資料轉換相同。",
+      "points": [
+        "int[] 建立整數陣列。",
+        "增強型 for 迴圈直接取得元素。",
+        "也能用 IntStream 的 filter 和 sum。"
+      ],
+      "example": "public class Main {\n    public static void main(String[] args) {\n        int[] numbers = {2, -1, 4};\n        int total = 0;\n        for (int n : numbers) {\n            if (n > 0) total += n;\n        }\n        System.out.println(total);\n    }\n}",
+      "starter": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[] values = Arrays.stream(scanner.nextLine().trim().split(\"\\\\s+\"))\n            .mapToInt(Integer::parseInt).toArray();\n\n        int total = 0;\n        // TODO：走訪 values，只加總正整數\n        System.out.println(total);\n    }\n}\n",
+      "solution": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[] values = Arrays.stream(scanner.nextLine().trim().split(\"\\\\s+\"))\n            .mapToInt(Integer::parseInt).toArray();\n\n        int total = 0;\n        for (int n : values) {\n            if (n > 0) total += n;\n        }\n        System.out.println(total);\n    }\n}\n",
+      "hint": "保留 n > 0 的元素，再加總。起始總和應為 0。",
+      "sourceTitle": "Dev.java · Learn Java",
+      "source": "https://dev.java/learn/",
+      "difference": "Java 的增強型 for 使用冒號；JavaScript 用 for...of，C# 用 foreach。",
+      "task": "讀入一行以空白分隔的整數（1–100 個，每個介於 -1000 與 1000），只加總大於 0 的數字並輸出。可使用迴圈、遞迴或 filter 搭配 sum。",
+      "tests": [
+        {
+          "input": "3 -2 5 0 -1",
+          "expected": "8",
+          "label": "只累加正整數"
+        },
+        {
+          "input": "-3 -2 -1",
+          "expected": "0",
+          "label": "全部非正數"
+        },
+        {
+          "input": "0 7 2 1",
+          "expected": "10",
+          "label": "含零的清單"
+        }
+      ]
+    }
+  },
+  "haskell": {
+    "bindings": {
+      "headline": "給資料一個名字",
+      "explanation": "程式用名稱指向資料，讓我們能儲存、計算並重複使用它。先把輸入轉成數字，再進行加法；否則某些語言可能把它當成文字串接。",
+      "points": [
+        "綁定不可變，不是可以反覆修改的儲存格。",
+        ":: Int 是型別註記；許多型別可自動推斷。",
+        "do 區塊串接 IO 動作，let 定義純粹的值。"
+      ],
+      "example": "main :: IO ()\nmain = do\n    let price = 120 :: Int\n        quantity = 2\n        total = price * quantity\n    print total  -- 240",
+      "starter": "add :: Int -> Int -> Int\nadd a b = 0  -- TODO：計算總和\n\nmain :: IO ()\nmain = do\n    input <- getLine\n    let values = map read (words input) :: [Int]\n    print (add (values !! 0) (values !! 1))\n",
+      "solution": "add :: Int -> Int -> Int\nadd a b = a + b\n\nmain :: IO ()\nmain = do\n    input <- getLine\n    let values = map read (words input) :: [Int]\n    print (add (values !! 0) (values !! 1))\n",
+      "hint": "先確認輸入已轉成整數，再把兩個值相加。",
+      "sourceTitle": "Haskell · A Gentle Introduction",
+      "source": "https://www.haskell.org/tutorial/",
+      "difference": "Haskell 的 = 表達定義，不是逐步賦值；把「值之間的關係」當成思考起點。",
+      "task": "讀入兩個以空白分隔的整數 a、b，綁定變數並輸出它們的總和。範圍：每個整數介於 -1000 與 1000。只輸出答案，不要加提示文字。",
+      "tests": [
+        {
+          "input": "12 8",
+          "expected": "20",
+          "label": "兩個正整數"
+        },
+        {
+          "input": "-5 2",
+          "expected": "-3",
+          "label": "含負整數"
+        },
+        {
+          "input": "0 0",
+          "expected": "0",
+          "label": "零的情況"
+        }
+      ]
+    },
+    "branches": {
+      "headline": "讓程式做出選擇",
+      "explanation": "條件判斷會依條件選擇一條路徑。當規則有多個區間，請由小到大思考，尤其注意邊界上的數字應該屬於哪一類。",
+      "points": [
+        "if 是運算式，then 和 else 都必須存在。",
+        "分支需要產生相容型別的值。",
+        "多個規則可以用 guards（守衛）表達。"
+      ],
+      "example": "result :: Int -> String\nresult score =\n    if score >= 60\n    then \"及格\"\n    else \"再試一次\"\n\nmain :: IO ()\nmain = putStrLn (result 72)",
+      "starter": "ticket :: Int -> Int\nticket age = 0  -- TODO：使用 guards 或 if 決定票價\n\nmain :: IO ()\nmain = do\n    input <- getLine\n    let values = map read (words input) :: [Int]\n    print (ticket (head values))\n",
+      "solution": "ticket :: Int -> Int\nticket age\n    | age < 6 = 0\n    | age < 18 = 80\n    | otherwise = 120\n\nmain :: IO ()\nmain = do\n    input <- getLine\n    let values = map read (words input) :: [Int]\n    print (ticket (head values))\n",
+      "hint": "先判斷 age < 6，再判斷 age < 18，最後處理成人票。",
+      "sourceTitle": "Haskell · A Gentle Introduction",
+      "source": "https://www.haskell.org/tutorial/",
+      "difference": "Haskell 的 if 一定有 else；Python 的 if 陳述式可以沒有 else 分支。",
+      "task": "讀入整數年齡 age（0–120），輸出票價：未滿 6 歲為 0 元；6–17 歲為 80 元；18 歲以上為 120 元。只輸出數字。",
+      "tests": [
+        {
+          "input": "5",
+          "expected": "0",
+          "label": "未滿 6 歲免費"
+        },
+        {
+          "input": "6",
+          "expected": "80",
+          "label": "6 歲的邊界"
+        },
+        {
+          "input": "17",
+          "expected": "80",
+          "label": "17 歲的邊界"
+        },
+        {
+          "input": "18",
+          "expected": "120",
+          "label": "18 歲成人票"
+        }
+      ]
+    },
+    "functions": {
+      "headline": "把運算變成可重複的積木",
+      "explanation": "函式把一段運算命名，接收輸入並產生結果。把「計算」和「讀取、顯示資料」分開，可以讓程式更容易理解與測試。",
+      "points": [
+        "Int -> Int 表示從整數到整數的函式。",
+        "呼叫函式以空白分隔，通常不寫 f(x)。",
+        "純函式以相同輸入產生相同結果，IO 分開處理。"
+      ],
+      "example": "double :: Int -> Int\ndouble n = n * 2\n\nmain :: IO ()\nmain = print (double 6)  -- 12",
+      "starter": "square :: Int -> Int\nsquare n = 0  -- TODO：回傳平方\n\nmain :: IO ()\nmain = do\n    input <- getLine\n    let values = map read (words input) :: [Int]\n    print (square (head values))\n",
+      "solution": "square :: Int -> Int\nsquare n = n * n\n\nmain :: IO ()\nmain = do\n    input <- getLine\n    let values = map read (words input) :: [Int]\n    print (square (head values))\n",
+      "hint": "平方是數字乘上自己；結果要從函式回傳。",
+      "sourceTitle": "Haskell · A Gentle Introduction",
+      "source": "https://www.haskell.org/tutorial/",
+      "difference": "Haskell 的函式預設柯里化；多個參數的型別可寫成 Int -> Int -> Int。",
+      "task": "完成 square 函式，接收整數 n 並回傳 n 的平方。主程式讀入 n（-1000–1000），呼叫 square 並輸出結果。",
+      "tests": [
+        {
+          "input": "4",
+          "expected": "16",
+          "label": "正整數平方"
+        },
+        {
+          "input": "-3",
+          "expected": "9",
+          "label": "負整數平方"
+        },
+        {
+          "input": "0",
+          "expected": "0",
+          "label": "零的平方"
+        }
+      ]
+    },
+    "collections": {
+      "headline": "一次處理一組資料",
+      "explanation": "集合保存一組資料。處理時可以逐一走訪，也可以先篩選再彙整。不同語言的寫法不一樣，但我們想完成的資料轉換相同。",
+      "points": [
+        "[Int] 表示整數清單。",
+        "filter (> 0) 保留正數，sum 加總清單。",
+        "可用函式組合或遞迴處理資料，不需要可變計數器。"
+      ],
+      "example": "positiveTotal :: [Int] -> Int\npositiveTotal xs = sum (filter (> 0) xs)\n\nmain :: IO ()\nmain = print (positiveTotal [2, -1, 4])\n-- 6",
+      "starter": "positiveTotal :: [Int] -> Int\npositiveTotal xs = 0  -- TODO：篩選正數後加總\n\nmain :: IO ()\nmain = do\n    input <- getLine\n    let values = map read (words input) :: [Int]\n    print (positiveTotal values)\n",
+      "solution": "positiveTotal :: [Int] -> Int\npositiveTotal xs = sum (filter (> 0) xs)\n\nmain :: IO ()\nmain = do\n    input <- getLine\n    let values = map read (words input) :: [Int]\n    print (positiveTotal values)\n",
+      "hint": "保留 n > 0 的元素，再加總。起始總和應為 0。",
+      "sourceTitle": "Haskell · A Gentle Introduction",
+      "source": "https://www.haskell.org/tutorial/",
+      "difference": "Haskell 清單是惰性串列結構，與 Java／C# 陣列在索引與求值方式上不同。",
+      "task": "讀入一行以空白分隔的整數（1–100 個，每個介於 -1000 與 1000），只加總大於 0 的數字並輸出。可使用迴圈、遞迴或 filter 搭配 sum。",
+      "tests": [
+        {
+          "input": "3 -2 5 0 -1",
+          "expected": "8",
+          "label": "只累加正整數"
+        },
+        {
+          "input": "-3 -2 -1",
+          "expected": "0",
+          "label": "全部非正數"
+        },
+        {
+          "input": "0 7 2 1",
+          "expected": "10",
+          "label": "含零的清單"
+        }
+      ]
+    }
+  }
+}

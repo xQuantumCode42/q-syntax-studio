@@ -1,0 +1,57 @@
+{
+  "name": "syntax-studio",
+  "productName": "Syntax Studio",
+  "version": "0.1.0",
+  "description": "以概念串起六種程式語言的 Windows 學習工作台",
+  "author": "Syntax Studio contributors",
+  "license": "MIT",
+  "main": "electron/main.cjs",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.cjs",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && vite build",
+    "start": "electron .",
+    "test": "node --test tests/*.test.cjs",
+    "test:desktop": "node scripts/smoke.cjs",
+    "pack:win": "npm run build && electron-builder --win dir",
+    "test:layout": "node scripts/layout-smoke.cjs"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "monaco-editor": "^0.55.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.1.0",
+    "electron": "^45.2.3",
+    "electron-builder": "^26.0.12",
+    "playwright": "^1.56.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.0"
+  },
+  "build": {
+    "appId": "org.syntaxstudio.desktop",
+    "productName": "Syntax Studio",
+    "directories": {
+      "output": "release/0.1.0"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "target": "dir",
+      "signExecutable": false,
+      "icon": "public/icon.ico"
+    }
+  }
+}

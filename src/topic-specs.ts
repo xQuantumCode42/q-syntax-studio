@@ -1,0 +1,147 @@
+import type { LanguageId, TestCase, TopicId } from './types';
+export type FoundationId = 'bindings' | 'branches' | 'functions' | 'collections';
+export type ExpandedId = Exclude<TopicId, FoundationId>;
+interface Spec {
+  headline: string; explanation: string; use: string; pitfall: string; points: string[];
+  notes: Record<LanguageId, string>; exerciseTitle: string; task: string; hint: string; tests: TestCase[];
+}
+const notes = (python: string, javascript: string, csharp: string, rust: string, java: string, haskell: string) => ({ python, javascript, csharp, rust, java, haskell });
+const t = (input: string, expected: string, label: string): TestCase => ({ input, expected, label });
+export const specs: Record<ExpandedId, Spec> = {
+  operators: {
+    headline: '除法不一定產生相同的結果', explanation: '同樣寫 a / b，不同語言可能得到整數或浮點數。先確認型別與輸入範圍，再比較運算結果。本節先以非負整數理解商與餘數。',
+    use: '把分鐘分成小時與剩餘分鐘，或把物品平均分組，都需要商與餘數。括號也能明確表達運算順序。', pitfall: '除數為零要另外處理。負數的向下取整與截向零並不相同，不能把非負數規則直接套用到負數。',
+    points: ['整數商與餘數代表分組的兩個部分。','先確認數值型別與運算順序。','先訂定輸入範圍，再比較符號規則。'],
+    notes: notes('Python / 產生浮點數，// 向下取整，divmod 同時取得商與餘數。','JavaScript / 使用 Number 除法；本題可用 Math.trunc 取整數商。','C# int / int 截向零，% 取得餘數。','Rust 整數除法截向零，型別決定整數或浮點運算。','Java 整數除以零會拋出例外，整數商截向零。','Haskell divMod 配對使用 div 與 mod，與 quotRem 的符號規則不同。'),
+    exerciseTitle: '計算整組數量與餘數', task: '讀入 a、b（0 ≤ a ≤ 1000，1 ≤ b ≤ 1000），輸出整數商與餘數，以一個空白分隔。', hint: '求整數商，再取餘數；注意 Python 與 JavaScript 的一般除法不會自動給你整數商。',
+    tests: [t('17 5','3 2','有餘數'),t('0 3','0 0','被除數為零'),t('12 4','3 0','剛好整除')],
+  },
+  loops: {
+    headline: '描述一次規則，執行很多次', explanation: '重複運算包含起點、終點與每次處理的工作。命令式語言常用 for 或 while；Haskell 可用數列與折疊表達同一個計算。',
+    use: '走訪資料與累積總和時，先列出少量步驟，再把不變的規則抽成迴圈或折疊。', pitfall: '含不含最後一個值？零次迭代的結果是否正確？while 也必須讓條件逐步接近終止。',
+    points: ['加總的初始值通常為 0。','區分包含與不包含端點的範圍。','先測 n=0 和 n=1，再測一般值。'],
+    notes: notes('Python range(1, n+1) 不包含上界 n+1。','JavaScript 用 let 更新區塊內的迴圈計數器。','C# for 分成初始化、條件與更新三段。','Rust 1..=n 包含 n，累加器需要 let mut。','Java for 在每輪開始前檢查條件。','Haskell [1..n] 建立數列，foldl 把狀態逐步傳遞，不修改原值。'),
+    exerciseTitle: '累加從 1 到 n', task: '讀入 n（0–1000），以重複處理計算 1 + 2 + … + n，只輸出總和。n=0 時輸出 0。Haskell 可使用數列與 fold。', hint: '先設定總和 0，再逐一加入 1 到 n；檢查端點是否包含 n。',
+    tests: [t('5','15','一般累加'),t('0','0','零次迭代'),t('1','1','只有一個值')],
+  },
+  strings: {
+    headline: '文字不是單純的一串位元組', explanation: '常見文字操作有搜尋、切割、串接與大小寫轉換。不同語言的字串表示不同，字元、UTF-16 碼元與 UTF-8 位元組的長度可能不同。',
+    use: '清理輸入、處理名稱與格式化輸出時，先確認是否需要處理 Unicode 與使用者語系。', pitfall: '空白也是文字的一部分。大小寫規則可能受語系影響；本題限定 ASCII，先避免編碼造成的額外差異。',
+    points: ['字串轉換通常產生新值。','不要不小心移除原本需要保留的空白。','字素、碼點、碼元與位元組是不同層次。'],
+    notes: notes('Python str 是 Unicode 文字，upper() 回傳新字串。','JavaScript 字串以 UTF-16 碼元索引，toUpperCase 回傳新字串。','C# ToUpperInvariant 避免目前語系影響本題結果。','Rust str 是 UTF-8，不能用整數直接索引；本題適合 to_ascii_uppercase。','Java toUpperCase(Locale.ROOT) 明確使用不依使用者語系的規則。','Haskell String 是 Char 清單，可用 map toUpper 轉換。'),
+    exerciseTitle: '保留空白的英文大寫轉換', task: '讀入一行 ASCII 英文字母與空白（長度 0–80），轉成大寫後輸出。原有空白需要保留。', hint: '使用大小寫轉換 API，不需要 split，也不要對整行 trim。',
+    tests: [t('Hello world','HELLO WORLD','混合大小寫'),t('a B c','A B C','保留空白'),t('','','空字串')],
+  },
+  maps: {
+    headline: '用一個鍵找到對應的值', explanation: '映射用鍵對應值，例如單字對應出現次數。同一個鍵再次寫入會更新值；查不到時，需要決定預設值或錯誤處理方式。',
+    use: '次數統計、設定表與快取都適合以鍵查詢。底層可能使用雜湊表或樹，介面相近但效能與順序不同。', pitfall: '不要依賴未保證的走訪順序。資料不存在與資料值為零，是不同狀態。',
+    points: ['每個鍵對應一個值。','更新前先處理尚未出現的鍵。','鍵需要符合相等、雜湊或排序限制。'],
+    notes: notes('Python dict.get(key, 0) 可提供預設值。','JavaScript Map.get 找不到鍵時回傳 undefined。','C# TryGetValue 避免索引不存在的鍵。','Rust entry().or_insert() 可建立或更新計數。','Java Map.merge 可合併舊值與新值。','Haskell Data.Map 是不可變有序映射，fromListWith 可合併相同鍵。'),
+    exerciseTitle: '建立數字次數表', task: '讀入 target，後面接至少一個整數（皆 -1000–1000）。對後面的資料建立次數映射，輸出 target 出現幾次；第一個 target 不列入統計。', hint: '第一個值是查詢鍵，其餘才是資料。新鍵的初始次數為 0。',
+    tests: [t('2 2 3 2 1','2','出現兩次'),t('7 1 2 3','0','不存在的鍵'),t('-1 -1 -1 0','2','負數鍵')],
+  },
+  sets: {
+    headline: '只關心存在，不重複保存', explanation: '集合保存不重複元素。再次加入已存在的值不會增加大小；聯集、交集與差集則表達集合之間的關係。',
+    use: '去重、檢查權限或記錄已走訪節點時，集合比手動維護清單更清楚表達唯一性的需求。', pitfall: '不要依賴雜湊集合的順序。若需要排序輸出，就明確排序；自訂型別也要正確定義相等規則。',
+    points: ['重複新增不會增加集合大小。','集合與清單的唯一性、順序語意不同。','先決定元素如何判斷相同。'],
+    notes: notes('Python set 的元素需可雜湊，空集合寫成 set()。','JavaScript Set 對物件使用參考身分判斷唯一性。','C# HashSet<T> 依相等比較器判斷重複。','Rust HashSet 元素需要 Eq 與 Hash。','Java HashSet 依 equals 與 hashCode 判斷重複。','Haskell Data.Set 是不可變有序集合，需要 Ord。'),
+    exerciseTitle: '數一數不同的整數', task: '讀入 1–100 個整數（-1000–1000），建立集合並輸出不同值的數量。', hint: '把數列轉成集合，再取得大小，不需要比較每一對元素。',
+    tests: [t('1 2 2 3','3','重複值'),t('-1 -1 0','2','負數與零'),t('5','1','單一元素')],
+  },
+  higherorder: {
+    headline: '把函式當作值，組合轉換步驟', explanation: '高階函式接收或回傳函式。map 轉換每個值，filter 篩選，fold／reduce 彙整結果。閉包則可以引用建立時可見的環境。',
+    use: '用小函式分開描述轉換、篩選與彙整，能讓資料處理規則容易閱讀、測試與重用。', pitfall: '捕捉的資料是否可變、何時求值、迭代器是否被消耗，都因語言而異。避免在轉換中加入難以追蹤的副作用。',
+    points: ['map 對每個輸入產生一個輸出。','filter 可能產生空結果。','reduce／fold 應選擇合適的初始值。'],
+    notes: notes('Python map、filter 回傳迭代器，lambda 表示簡短函式。','JavaScript 陣列的 map、filter 建立新陣列；reduce 記得提供初始值。','C# LINQ Select 與 Where 常延遲執行。','Rust 閉包推斷捕捉方式，迭代器直到消耗時才工作。','Java Stream 的 sum 是終端操作。','Haskell 的 map、filter、sum 可直接組合。'),
+    exerciseTitle: '平方、篩選，再加總', task: '讀入 1–100 個整數（-100–100）。先平方每個值，再保留偶數平方，最後輸出總和。使用 map／filter／彙整或本語言對應操作。', hint: '順序是平方、保留偶數、加總。沒有符合條件的值時輸出 0。',
+    tests: [t('1 2 3 4','20','一般轉換'),t('-2 -1 0 3','4','負數與零'),t('1 3 5','0','空篩選結果')],
+  },
+  recursion: {
+    headline: '每次呼叫，都更接近終點', explanation: '遞迴函式呼叫自己。正確遞迴需要能直接回答的基本情況，以及將其餘輸入縮小的遞迴步驟。',
+    use: '樹、巢狀資料與分治演算法常適合遞迴。先寫出關係，再用小輸入追蹤呼叫與回傳。', pitfall: '缺少終止條件或沒有縮小問題都可能無限呼叫。還要考慮呼叫堆疊、時間與數值溢位。',
+    points: ['先處理基本情況。','每次呼叫都朝基本情況前進。','尾呼叫最佳化不能跨語言一概而論。'],
+    notes: notes('Python 有遞迴深度限制。','JavaScript 執行環境不保證此寫法具備尾呼叫最佳化。','C# 遞迴仍使用呼叫堆疊。','Rust 不保證尾呼叫消除。','Java 過深遞迴可能造成 StackOverflowError。','Haskell 可用模式匹配定義基本與遞迴情況。'),
+    exerciseTitle: '用遞迴計算階乘', task: '實作遞迴 factorial，讀入 n（0–10），輸出 n!。定義 0! = 1，n! = n × (n−1)!。', hint: '0 或 1 可直接回傳 1；其他情況乘上 factorial(n−1)。',
+    tests: [t('5','120','一般階乘'),t('0','1','基本情況'),t('10','3628800','本題上界')],
+  },
+  records: {
+    headline: '讓資料結構說明它代表什麼', explanation: '自訂型別把相關資料與行為放在同一概念下。類別、struct、record 與代數資料型別能表達相似需求，但機制並不完全相同。',
+    use: 'Rectangle 比沒有關聯的兩個整數更能表達寬與高。建構資料之後，用方法或函式表示面積等領域運算。', pitfall: '先決定欄位可變性、相等語意與可見性。不要為了對齊語法而把所有語言硬套成類別。',
+    points: ['用型別名稱組織相關欄位。','把資料操作命名。','分清型別定義、建構與呼叫。'],
+    notes: notes('Python __init__ 設定欄位，self 代表目前物件。','JavaScript class 的方法可透過 this 取得欄位。','C# record 提供值相等語意與位置參數屬性。','Rust struct 定義資料，impl 加入方法，&self 表示借用。','Java record 的元件欄位不能重新賦值。','Haskell data 定義建構子，area 是操作資料的純函式。'),
+    exerciseTitle: '建立矩形型別並求面積', task: '定義 Rectangle，保存 width、height 並提供 area 方法或函式。讀入寬、高（各 0–1000），建立矩形並輸出面積。', hint: '先定義建構方式，再讓 area 負責寬乘高。Haskell 可使用純函式。',
+    tests: [t('3 4','12','一般矩形'),t('0 7','0','零寬度'),t('8 8','64','正方形')],
+  },
+  polymorphism: {
+    headline: '同一個操作，交給不同型別實作', explanation: '多型讓呼叫端依行為操作資料，不必了解每種型別的細節。介面、Trait、型別類別與鴨子型別提供不同的檢查及分派方式。',
+    use: '多種計分、付款或輸出策略可以先定義共同操作，再加入不同實作；呼叫端不用長串型別判斷。', pitfall: 'Haskell typeclass 不是物件繼承；Rust 動態 Trait 物件與泛型靜態分派也不同。方法同名不代表行為契約一定相容。',
+    points: ['先定義共同操作。','不同型別提供各自實作。','呼叫端依共同契約組合結果。'],
+    notes: notes('Python 範例採鴨子型別，不要求繼承同一基底。','JavaScript 不必宣告 interface，但需維持共同方法契約。','C# interface 可讓不同實作放進相同介面陣列。','Rust &dyn Scored 在本例採動態分派。','Java record 可 implements 共同介面。','Haskell typeclass 透過 instance 提供行為，不是物件繼承。'),
+    exerciseTitle: '兩種計分器，共用 score', task: '建立 DoubleScore、TripleScore，提供共同 score 操作，分別回傳 n 的兩倍、三倍。讀入 n（-1000–1000），建立兩種值並輸出分數總和。', hint: '各自實作 score，再組合結果。數值測試不會證明使用了介面，AI 可進一步檢視概念。',
+    tests: [t('4','20','一般分數'),t('0','0','零值'),t('-2','-10','負數')],
+  },
+  generics: {
+    headline: '重用一份邏輯，保留型別關係', explanation: '泛型或參數多型讓同一份程式處理不同型別，同時保留輸入、輸出之間的關係。需要複製或比較時，再加入相應約束。',
+    use: '取得首值、包裝結果或建立容器時，通常不必知道元素的具體型別。用兩種型別呼叫，可檢查設計是否可重用。', pitfall: 'JavaScript 本身沒有 TypeScript 式泛型檢查；Python 型別註記也不自動執行 runtime 檢查。動態可重用性與編譯器保證不同。',
+    points: ['保留元素與回傳值的型別關係。','只加入實作需要的約束。','空集合要有明確結果。'],
+    notes: notes('Python TypeVar、Sequence[T] 描述關係，需型別檢查器作靜態驗證。','JavaScript @template 是 JSDoc 註記，不強制執行時型別。','C# <T> 讓編譯器保留參數與結果型別。','Rust T: Clone 用來從借用切片回傳擁有的值。','Java <T> 表示型別參數，本例 int 透過 Integer 包裝。','Haskell 的 a 表示參數多型，不需另寫泛型宣告。'),
+    exerciseTitle: '泛型的首值或預設值', task: '完成 firstOr／first_or：空集合回傳 fallback，否則回傳首值。示範字串也能使用，再讀入一行整數（可空行，最多 100 個），以 -1 作為預設值並輸出結果。', hint: '先處理空集合；函式本體不依賴整數運算，才能同時處理字串。',
+    tests: [t('7 8 9','7','取首值'),t('','-1','空集合'),t('0 4','0','零不是缺值')],
+  },
+  modules: {
+    headline: '建立清楚的名稱與依賴邊界', explanation: '模組與命名空間組織名稱、管理可見性並引用功能。模組、類別命名空間與套件管理屬不同層次；本節先練習引用和限定名稱。',
+    use: '將數值工具、資料處理與介面分開，可以減少名稱衝突、建立依賴邊界。標準函式庫通常是第一個可重用的來源。', pitfall: 'Java import 不等於 JPMS 模組；JavaScript 物件命名空間也不是 ES module。此版單檔練習不包含完整跨檔案建置。',
+    points: ['引用與公開名稱是兩個方向。','限定名稱能表達功能來自何處。','第三方依賴另需版本管理。'],
+    notes: notes('Python import math 引用模組，以 math.gcd 呼叫。','JavaScript 本 App 採 CommonJS require；arithmetic 物件只是命名空間。','C# using 引用命名空間，靜態類別在此組織工具方法。','Rust mod 建立模組、pub 控制可見性、:: 解析路徑。','Java import 引入型別，BigInteger 位於 java.math 套件。','Haskell 可用 Module.name 限定名稱，Prelude 預設提供 gcd。'),
+    exerciseTitle: '透過限定名稱計算最大公因數', task: '讀入 a、b（0 ≤ a ≤ 1000，1 ≤ b ≤ 1000）。引用標準函式庫，或將 gcd 放進模組／命名空間，輸出最大公因數。', hint: '可反覆將 (a,b) 更新成 (b,a 的餘數)，直到 b=0；或使用標準庫 gcd。',
+    tests: [t('48 18','6','共同因數'),t('0 8','8','其中一值為零'),t('17 13','1','互質')],
+  },
+  ownership: {
+    headline: '兩個名字，是否共享同一份資料？', explanation: '賦值可能複製值，也可能共享物件參考。Rust 進一步以所有權與借用約束存取；Haskell 則以不可變資料建立新值。',
+    use: '編輯草稿、保留快照或傳遞資料時，先問是否需要獨立副本。借用與不可變設計能減少不必要的複製。', pitfall: '淺複製只複製外層，巢狀物件仍可能共享。本題只有整數元素，一層容器複製已足夠。',
+    points: ['重新綁定與修改物件內容不同。','確認複製深度符合需求。','借用規則與垃圾回收參考不是同一機制。'],
+    notes: notes('Python list.copy 建立新外層清單，直接賦值則共享。','JavaScript 展開語法是淺複製，const 不代表內容不可變。','C# 陣列是參考型別，Clone 建立淺複製。','Rust &original 是共享借用，clone 建立獨立 Vec。','Java 陣列賦值共享參考，clone 建立新陣列。','Haskell map (+1) 建立新清單，不修改原資料。'),
+    exerciseTitle: '修改副本，保留原資料', task: '讀入 n（-1000–1000），建立包含 n 的單元素集合，再建立獨立的新集合，使新集合首值加 1。輸出原、新集合首值，以空白分隔。Haskell 使用不可變轉換。', hint: '不要只把同一個可變容器賦給另一個名稱。此題整數元素只需淺複製。',
+    tests: [t('5','5 6','原值不變'),t('-1','-1 0','負數'),t('0','0 1','零值')],
+  },
+  matching: {
+    headline: '把可能的情況完整列出', explanation: '模式匹配依資料形狀或值選擇分支，可搭配解構、守衛與代數資料型別。switch 也能處理有限情況，但未必具備結構匹配與完整性檢查。',
+    use: '處理列舉、狀態與成功／失敗結果時，清楚列出情況通常比巢狀 if 更容易檢查。', pitfall: '過早的萬用分支會遮蔽後續情況。JavaScript switch 需留意 break；產生值的分支還有回傳型別要求。',
+    points: ['列出合法狀態與結果。','明確處理不合法情況。','結構模式匹配比單純值比較更有表達力。'],
+    notes: notes('Python match/case 需要 3.10+，_ 是萬用模式。','JavaScript 本例是 switch，不是 Rust 式結構匹配。','C# switch expression 支援關係與邏輯模式。','Rust match 要完整處理情況，可用範圍與 |。','Java switch expression 以箭頭分支產生值。','Haskell case 搭配 guards 選擇結果。'),
+    exerciseTitle: '將星期分類', task: '讀入整數（-10–20），1–5 輸出 WORKDAY，6–7 輸出 WEEKEND，其餘輸出 INVALID。使用 match、case 或 switch。', hint: '平日、週末、其他分成三類，特別檢查 0 與 8。',
+    tests: [t('1','WORKDAY','週一'),t('7','WEEKEND','週日'),t('0','INVALID','不合法下界'),t('8','INVALID','不合法上界')],
+  },
+  errors: {
+    headline: '失敗是需要設計的正常路徑', explanation: '轉型與 I/O 都可能失敗。程式可拋出例外，也可回傳成功／失敗結果；應在知道如何處理的邊界作出決定，而不是默默吞掉錯誤。',
+    use: '先區分可預期輸入問題與程式錯誤，再選擇訊息、重試或預設行為。保留足夠資訊，避免失敗被當成成功。', pitfall: '不要把所有錯誤都 catch 後忽略，也不要把轉型失敗當成數字 0。部分解析與完整解析的接受規則不同。',
+    points: ['錯誤狀態與合法零值要能區分。','只處理理解且可恢復的錯誤。','不要洩漏不必要的內部資料。'],
+    notes: notes('Python int 失敗會拋出 ValueError。','JavaScript parseInt 接受部分文字，本例用完整格式檢查避免接受 12x。','C# TryParse 以成功旗標與 out 值回報結果。','Rust parse 回傳 Result，以 Ok 與 Err 分支處理。','Java Integer.parseInt 失敗拋出 NumberFormatException。','Haskell reads 還回報剩餘文字，須確認已消耗整份輸入。'),
+    exerciseTitle: '安全地把文字轉成整數', task: '讀入一行文字。有效格式為可選的正負號加上一個以上 ASCII 數字，且數值需介於 -1000 與 1000。有效時輸出兩倍，否則輸出 INVALID。空白、12x、1_0 都不能被接受。', hint: '先確認完整格式，再安全解析並檢查範圍；讓失敗與合法的 0 分開。',
+    tests: [t('12','24','合法整數'),t('-3','-6','負整數'),t('12x','INVALID','拒絕部分解析'),t('','INVALID','空文字'),t('1001','INVALID','超出範圍'),t('+12','24','明確正號'),t('1_0','INVALID','拒絕底線'),t('999999999999999999999999','INVALID','巨大數字')],
+  },
+  files: {
+    headline: '跨出記憶體，管理檔案資源', explanation: '檔案 I/O 涉及開啟模式、編碼、路徑與關閉時機，也可能因權限與不存在的路徑而失敗。純計算與檔案邊界應分開思考。',
+    use: '匯出紀錄、讀取設定與保存資料都需要 I/O。本 App 的練習使用獨立暫存工作目錄，結束後清理本次檔案。', pitfall: '相對路徑以工作目錄為基準。寫入常會覆寫原內容；讀寫需一致編碼。本題限定 ASCII，先避免不同字數定義的影響。',
+    points: ['先決定覆寫還是附加。','讀寫使用一致編碼。','明確管理關閉時機與失敗路徑。'],
+    notes: notes('Python with 在離開時關閉檔案，建議指定 UTF-8。','Node.js fs 同步 API 適合短練習，長任務要考慮阻塞。','C# File.ReadAllText／WriteAllText 自行開關資源。','Rust std::fs 讀寫回傳 Result，正式程式需處理錯誤。','Java Files.readString／writeString 預設 UTF-8。','Haskell readFile 採惰性讀取，需留意求值與資源生命週期。'),
+    exerciseTitle: '寫入、讀回，再計算字數', task: '讀入一行 ASCII 文字（0–80 字，可能包含空白），寫入工作目錄的 practice.txt，再讀回並輸出字數。不要額外寫入輸入換行。', hint: '寫完並關閉後再讀回，字數取自讀回內容。檔案只放在本次暫存目錄。',
+    tests: [t('hello world','11','含空白'),t('abc','3','短文字'),t('','0','空檔案')],
+  },
+  concurrency: {
+    headline: '啟動工作後，還要取得它的結果', explanation: '並行表示工作在時間上交錯進展，平行表示同時執行。非同步是一種等待與組合方式，不自動保證 CPU 平行。本節用背景工作與等待結果建立基本模型。',
+    use: '避免 UI 阻塞、等待多項 I/O 或分派獨立工作時，先設計結果與失敗如何傳回，再思考取消與資源釋放。', pitfall: '啟動順序不等於完成順序。共享可變狀態可能造成競爭；本題只傳數字、等待單一結果，不依賴不確定的輸出順序。',
+    points: ['分清啟動、等待與失敗處理。','先避免共享可變狀態。','小工作不會因另開執行緒必然變快。'],
+    notes: notes('Python ThreadPoolExecutor 提供 Future；一般 CPython 的 GIL 限制此類 Python CPU 工作的執行緒平行。','Node.js Worker 是工作執行緒；Promise 本身不代表另開 CPU 執行緒。','C# Task.Run 通常交給執行緒集區，Task 表達可等待工作。','Rust thread::spawn 與 join 是執行緒模型，不是 async runtime。','Java ExecutorService 管理 Future，使用完需 shutdown。','Haskell forkIO 是輕量執行緒，以 MVar 傳結果；CPU 平行另涉及 RTS 與建置設定。'),
+    exerciseTitle: '等待背景平方工作', task: '讀入 n（0–1000），啟動背景工作計算平方，透過 Future、Task、Worker、join 或 MVar 等等待結果，最後只輸出一次答案。', hint: '傳入 n，讓工作回傳或傳送結果，再由主流程輸出；不要用固定延遲猜測完成時間。',
+    tests: [t('4','16','等待結果'),t('0','0','零值'),t('1000','1000000','較大輸入')],
+  },
+  testing: {
+    headline: '把預期行為寫成可執行檢查', explanation: '測試記錄輸入與預期結果，再反覆執行。單元測試聚焦小範圍行為；斷言讓條件不成立時失敗。本節先不用外部框架，建立可重複檢查的習慣。',
+    use: '修錯前先寫能重現問題的案例，有助避免回歸。測試一般值、邊界值與曾失敗的情況，比只測順利案例更有效。', pitfall: '通過案例不是數學證明。某些語言可停用 assert，因此外部輸入驗證不該只依賴斷言。',
+    points: ['每個案例都有明確預期值。','失敗時應讓程式或測試失敗。','修改後重跑，避免回歸。'],
+    notes: notes('Python assert 可在最佳化模式被停用。','Node.js node:assert/strict 可比較實際與預期。','C# 本例以拋出例外實作最小斷言，完整專案可採正式框架。','Rust assert_eq! 不相等時 panic，正式測試常用 #[test]。','Java assert 需要 -ea，本 App Runner 已開啟。','Haskell assert 包裝的值被求值時，才會執行檢查。'),
+    exerciseTitle: '為平方函式補上三個檢查', task: '實作 square，先斷言 square(2)=4、square(-3)=9、square(0)=0，再讀入 n（-1000–1000）並只輸出 square(n)。', hint: '計算放在 square，先比較三組實際與預期；失敗時不能只印一句訊息後繼續成功退出。',
+    tests: [t('4','16','其他正整數'),t('-3','9','負數回歸案例'),t('0','0','零值邊界')],
+  },
+};
